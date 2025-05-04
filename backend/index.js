@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import connectDB from "./config/db.js";
 import userRouter from "./routes/user-routes.js";
+import vehicleRouter from "./routes/vehicle-routes.js";
 
 config();
 const App = express();
@@ -17,6 +18,7 @@ App.get('/',(req,res)=>{
   res.send("<h1>Hello</h1>")
 })
 App.use('/api/v1',userRouter);
+App.use('/api/v1',vehicleRouter);
 
 App.listen(PORT, () => {
   console.log(`Server is Running on ${PORT}`)

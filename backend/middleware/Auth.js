@@ -34,7 +34,7 @@ export const isAuthorizedRole = (role) => async (req, res, next) => {
         message: "User Does not Exist"
       })
     }
-    if (user.role === "admin") {
+    if (user.role === role) {
       next();
     } else {
       return res.status(404).json({
