@@ -18,34 +18,39 @@ export const isAuth = async (req, res, next) => {
   }
 }
 
-export const isAuthorizedRole = (role) => async (req, res, next) => {
+export const isAuthorizedRole = (requiredRole) => async (req, res, next) => {
   try {
-    const id = req.user.id;
-    if (!id) {
-      return res.status(404).json({
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
         success: false,
-        message: "Please Login first"
-      })
+        message: "Unauthorized: Please login first"
+      });
     }
-    const user = await userModel.findById(id);
+
+    const user = await userModel.findById(userId);
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User Does not Exist"
-      })
+        message: "User does not exist"
+      });
     }
-    if (user.role === role) {
-      next();
-    } else {
-      return res.status(404).json({
+
+    if (user.role !== requiredRole) {
+      return res.status(403).json({
         success: false,
-        message: "You are not allowed access these resources"
-      })
+        message: "Forbidden: You are not allowed to access this resource"
+      });
     }
+
+    next();
+
   } catch (error) {
     return res.status(500).json({
       success: false,
-      error: error
-    })
+      message: "Server error",
+      error: error.message
+    });
   }
-}
+};

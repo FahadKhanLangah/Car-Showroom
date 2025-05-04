@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
   role: { type: String, default: "user", enum: ["user", "admin"] },
   address : String,
   city: { type: String, required: true },
-  avatar: String
+  avatar: String,
+  searchHistory: [{ type: String }]
 }, { timestamps: true })
 
 export const userModel = mongoose.model('user', userSchema);
