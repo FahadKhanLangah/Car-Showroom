@@ -35,7 +35,16 @@ export const createOrder = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await orderModel.find().populate({
+    const { startDate, endDate } = req.query;
+    const filter = {};
+    if (startDate || endDate) {
+      filter.createdAt = {};
+      if (startDate) filter.createdAt.$gte = new Date(startDate);
+      if (endDate) filter.createdAt.$lte = new Date(endDate);
+    }
+    // GET /api/v1/orders?startDate=2024-05-01&endDate=2024-05-30
+
+    const orders = await orderModel.find(filter).populate({
       path: "userId",
       select: "name"
     })
