@@ -34,7 +34,7 @@ const Cars = () => {
               <img className='h-[70%] w-[70%] object-cover rounded-sm' src={v.img_url} alt="" />
               <span>
                 <h1 className='font-semibold'>{v.make} {v.model}</h1>
-                <p className='text-red-500'>{v.price}</p>
+                <p className='text-red-500'><i>pkr</i> - {v.price}</p>
               </span>
             </div>
           </Link>
