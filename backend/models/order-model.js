@@ -5,8 +5,6 @@ const orderSchema = new mongoose(
     vehicleId: { type: mongoose.Schema.Types.ObjectId, ref: 'vehicle' },
     priceAtPurchase: Number,
     purchaseDate: Date,
-    paymentStatus : {type : String , enum : ["pending", "completed"]},
-    discount : Number,
-    invoicePdfUrl: String,
+    paymentStatus : {type : String , enum : ["pending", "completed"], default : "pending"},
   });
 export const orderModel = mongoose.model('order', orderSchema);
