@@ -1,18 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom';
-import { cars } from '../db/car';
 
 const Cars = () => {
-  const [sortOrder, setSortOrder] = useState("default");
-  const getSortedCars = () => {
-    let sortedCars = [...cars];
-    if (sortOrder === 'low-to-high') {
-      sortedCars.sort((a, b) => a.price - b.price);
-    } else if (sortOrder === 'high-to-low') {
-      sortedCars.sort((a, b) => b.price - a.price);
-    }
-    return sortedCars;
-  };
+  
 
   return (
     <div className='m-10'>
