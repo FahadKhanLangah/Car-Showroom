@@ -1,32 +1,49 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Async thunk for fetching vehicles
+
 export const fetchVehicles = createAsyncThunk(
   'vehicles/fetchVehicles',
   async () => {
-    const response = await axios.get('YOUR_BACKEND_API_ENDPOINT');
+    const response = await axios.get('http://localhost:4000/api/v1/get-all-vehicles');
     return response.data;
   }
 );
 
+export const searchVehicles = createAsyncThunk(
+  'vehicles/searchVehicles',
+  async (searchTerm) => {
+    const response = await axios.get(`http://localhost:4000/api/v1/search?q=${searchTerm}`);
+    return response.data;
+  })
 const vehiclesSlice = createSlice({
   name: 'vehicles',
   initialState: {
     vehicles: [],
     totalStock: 0,
-    status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
-    error: null
+    status: 'idle',
+    error: null,
+    filteredVehicles: [],
+    searchStatus: 'idle',
+    searchError: null
   },
   reducers: {
     sortVehicles: (state, action) => {
-      if (action.payload === 'low-to-high') {
-        state.vehicles.sort((a, b) => a.price - b.price);
-      } else if (action.payload === 'high-to-low') {
-        state.vehicles.sort((a, b) => b.price - a.price);
+      const targetArray = state.filteredVehicles.length > 0 
+        ? state.filteredVehicles 
+        : state.vehicles;
+        if (action.payload === 'low-to-high') {
+          targetArray.sort((a, b) => a.price - b.price);
+        } else if (action.payload === 'high-to-low') {
+          targetArray.sort((a, b) => b.price - a.price);
+        }
+      },
+      clearSearchResults: (state) => {
+        state.filteredVehicles = [];
+        state.searchStatus = 'idle';
+        state.searchError = null;
       }
-    }
-  },
+    },
   extraReducers(builder) {
     builder
       .addCase(fetchVehicles.pending, (state) => {
@@ -40,17 +57,33 @@ const vehiclesSlice = createSlice({
       .addCase(fetchVehicles.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      }).addCase(searchVehicles.pending, (state) => {
+        state.searchStatus = 'loading';
+      })
+      .addCase(searchVehicles.fulfilled, (state, action) => {
+        state.searchStatus = 'succeeded';
+        state.filteredVehicles = action.payload.vehicles;
+      })
+      .addCase(searchVehicles.rejected, (state, action) => {
+        state.searchStatus = 'failed';
+        state.searchError = action.error.message;
       });
   }
 });
 
-export const { sortVehicles } = vehiclesSlice.actions;
+export const { sortVehicles, clearSearchResults } = vehiclesSlice.actions;
 
-export const selectAllVehicles = (state) => state.vehicles.vehicles;
+export const selectAllVehicles = (state) => 
+  state.vehicles.filteredVehicles.length > 0 
+    ? state.vehicles.filteredVehicles 
+    : state.vehicles.vehicles;
 export const selectVehicleById = (state, vehicleId) =>
   state.vehicles.vehicles.find(vehicle => vehicle._id === vehicleId);
 export const getVehiclesStatus = (state) => state.vehicles.status;
+export const getSearchStatus = (state) => state.vehicles.searchStatus;
 export const getVehiclesError = (state) => state.vehicles.error;
+export const getSearchError = (state) => state.vehicles.searchError;
 export const getTotalStock = (state) => state.vehicles.totalStock;
+export const isSearchActive = (state) => state.vehicles.filteredVehicles.length > 0;
 
 export default vehiclesSlice.reducer;

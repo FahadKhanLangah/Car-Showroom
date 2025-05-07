@@ -68,25 +68,42 @@ export const getVehicleDetail = async (req, res) => {
 
 export const searchVehicles = async (req, res) => {
   try {
-    const { make, model, year, category, vehicleType, page = 1, limit = 10 } = req.query;
-    const userId = req.user?.id; // assuming user is authenticated
-    const searchTerms = [make, model, year, category, vehicleType]
-      .filter(Boolean)
-      .map(term => term.toLowerCase());
+    const {
+      q, make, model, year, category, vehicleType,
+      page = 1, limit = 10
+    } = req.query;
 
-    // Save unique recent search terms (you can limit to last 10)
+    const userId = req.user?.id;
+
+    const query = {};
+
+    if (q) {
+      const regex = new RegExp(q, "i");
+      query.$or = [
+        { make: regex },
+        { model: regex },
+        { year: regex },
+        { category: regex },
+        { vehicleType: regex }
+      ];
+    } else {
+      if (make) query.make = new RegExp(make, "i");
+      if (model) query.model = new RegExp(model, "i");
+      if (year) query.year = year;
+      if (category) query.category = new RegExp(category, "i");
+      if (vehicleType) query.vehicleType = new RegExp(vehicleType, "i");
+    }
+
+    // Save search history
+    const searchTerms = q
+      ? [q.toLowerCase()]
+      : [make, model, year, category, vehicleType].filter(Boolean).map(term => term.toLowerCase());
+
     if (userId && searchTerms.length) {
       await userModel.findByIdAndUpdate(userId, {
         $addToSet: { searchHistory: { $each: searchTerms } }
       });
     }
-
-    const query = {};
-    if (make) query.make = new RegExp(make, "i");
-    if (model) query.model = new RegExp(model, "i");
-    if (year) query.year = year;
-    if (category) query.category = new RegExp(category, "i");
-    if (vehicleType) query.vehicleType = new RegExp(vehicleType, "i");
 
     const skip = (page - 1) * limit;
 
