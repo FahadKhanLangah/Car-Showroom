@@ -16,9 +16,7 @@ export const searchVehicles = createAsyncThunk(
     const response = await axios.get(`http://localhost:4000/api/v1/search?q=${searchTerm}`);
     return response.data;
   })
-const vehiclesSlice = createSlice({
-  name: 'vehicles',
-  initialState: {
+  const initialState = {
     vehicles: [],
     totalStock: 0,
     status: 'idle',
@@ -26,7 +24,10 @@ const vehiclesSlice = createSlice({
     filteredVehicles: [],
     searchStatus: 'idle',
     searchError: null
-  },
+  }
+const vehiclesSlice = createSlice({
+  name: 'vehicles',
+  initialState,
   reducers: {
     sortVehicles: (state, action) => {
       const targetArray = state.filteredVehicles.length > 0 

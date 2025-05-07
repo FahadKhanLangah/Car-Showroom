@@ -1,12 +1,11 @@
 // src/components/Header.js
 import React, { useState } from 'react';
-import carLogo from '../assets/car_logo.jpg';
 import { FaSearch } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import { useDispatch } from 'react-redux';
-import { clearSearchResults, searchVehicles} from '../features/vehicles/vehiclesSlice';
-
+import { clearSearchResults, searchVehicles } from '../features/vehicles/vehiclesSlice';
+import { MdHome } from "react-icons/md";
 const Header = () => {
   const [showNav, setShowNav] = useState(false);
   const [search, setSearch] = useState("");
@@ -18,26 +17,24 @@ const Header = () => {
       dispatch(searchVehicles(search));
     }
   };
-
+  const navigate = useNavigate();
   const handleLogoClick = () => {
     setShowNav(!showNav);
-    // Clear search results when logo is clicked (going to home)
     dispatch(clearSearchResults());
     setSearch("");
+    navigate('/')
   };
 
   return (
     <div className='sm:h-20 relative flex sm:flex-row flex-col gap-2 sm:rounded-b-none rounded-b-lg sm:justify-between items-center bg-amber-500'>
       <Navbar showNav={showNav} setShowNav={setShowNav}></Navbar>
       <div className='flex px-2 sm:px-6 gap-6 mt-2 sm:mt-0 w-full'>
-        <img 
-          onClick={handleLogoClick} 
-          className='justify-items-start h-10 w-10 rounded-full cursor-pointer' 
-          src={carLogo} 
-          alt="CarLogo" 
-        />
-        <Link 
-          to={'/'} 
+        <span onClick={handleLogoClick}
+          className='justify-items-start text-4xl rounded-full cursor-pointer'>
+          <MdHome />
+        </span>
+        <Link
+          to={'/'}
           onClick={() => {
             dispatch(clearSearchResults());
             setSearch("");
@@ -46,19 +43,20 @@ const Header = () => {
           <h3 className='text-3xl sm:ml-6 bg-none font-bold'>DB Central Motors</h3>
         </Link>
       </div>
-      <div className='mb-2 sm:mb-0 px-2 sm:px-6'>
+      <div className='mb-2 sm:mb-0 px-2 sm:px-6 flex items-center gap-4'>
         <form onSubmit={handleSearch} className='border-2 rounded-lg px-5 py-3 flex items-center justify-between'>
-          <input 
-            value={search} 
-            onChange={e => setSearch(e.target.value)} 
-            type="text" 
-            className='w-3xs font-semibold h-6 outline-none' 
-            placeholder='Search Your Favourite Car..' 
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            type="text"
+            className='w-3xs font-semibold h-6 outline-none'
+            placeholder='Search Your Favourite Car..'
           />
           <button type='submit' className='ml-2 cursor-pointer'>
             <FaSearch></FaSearch>
           </button>
         </form>
+        <Link to={'/auth'}> <button className='hover:underline cursor-pointer'>Login</button></Link>
       </div>
     </div>
   );

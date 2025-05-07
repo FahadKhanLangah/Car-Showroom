@@ -38,7 +38,7 @@ const CarCard = () => {
               <p><strong>Transmission:</strong> {carDetail.transmission}</p>
               <p><strong>Vehicle Type:</strong> {carDetail.vehicleType}</p>
               <button className='bg-amber-500 hover:bg-amber-600 transition-colors duration-300 px-6 py-3 mt-4 font-bold rounded cursor-pointer'>
-                Buy : {carDetail.price}
+                Buy : {carDetail.price} pkr
               </button>
             </span>
           </div>
