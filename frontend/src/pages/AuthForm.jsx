@@ -1,37 +1,43 @@
 import { useState } from 'react';
 import { MdHome } from "react-icons/md";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { login } from '../features/auth/authSlice';
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     name: '',
-    email: '',
+    phone: '',
     password: '',
+    email: '',
     city: '',
-    avatar: '',
-    phone: ''
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
+    avatar: null
+  })
+  const handleInputChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+  const handleFileChange = (e) => {
+    setForm({ ...form, avatar: e.target.files[0] })
+  }
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isLogin) {
-      console.log("Logging in:", form);
-
+      dispatch(login({ email: form.email, password: form.password })).then(({ meta }) => {
+        if (meta.requestStatus === 'fulfilled') navigate('/');
+      });
     } else {
-      console.log("Signing up:", form);
+      console.log("Helo")
+      console.table(form);
     }
   };
 
   return (
     <div className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 px-4">
-      <Link to={'/'}><span className='absolute text-4xl top-3 left-3 sm:left-10 sm:text-5xl sm:top-10 cursor-pointer'>
+      <Link to={'/'} className='absolute text-4xl top-3 left-3 sm:left-10 sm:text-5xl sm:top-10 cursor-pointer'>
         <MdHome />
-      </span></Link>
+      </Link>
       <div className="w-full max-w-md sm:my-10 bg-white rounded-2xl shadow-2xl p-8 transition-all duration-500">
         <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
           {isLogin ? 'Login' : 'Sign Up'}
@@ -44,7 +50,7 @@ const AuthForm = () => {
                 type="text"
                 name="name"
                 value={form.name}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
               />
@@ -56,7 +62,7 @@ const AuthForm = () => {
               type="email"
               name="email"
               value={form.email}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
               className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
@@ -67,7 +73,7 @@ const AuthForm = () => {
               type="password"
               name="password"
               value={form.password}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
               className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
@@ -79,7 +85,7 @@ const AuthForm = () => {
                 type="text"
                 name="city"
                 value={form.city}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
               />
@@ -90,7 +96,7 @@ const AuthForm = () => {
                 type="text"
                 name="phone"
                 value={form.phone}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
               />
@@ -100,8 +106,7 @@ const AuthForm = () => {
               <input
                 type="file"
                 name="avatar"
-                value={form.avatar}
-                onChange={handleChange}
+                onChange={handleFileChange}
                 required
                 className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
               />

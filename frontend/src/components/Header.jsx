@@ -1,16 +1,16 @@
-// src/components/Header.js
 import React, { useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearSearchResults, searchVehicles } from '../features/vehicles/vehiclesSlice';
 import { MdHome } from "react-icons/md";
+import { IoPersonCircleOutline } from "react-icons/io5";
 const Header = () => {
   const [showNav, setShowNav] = useState(false);
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
-
+  const { isAuth } = useSelector(v => v.auth)
   const handleSearch = (e) => {
     e.preventDefault();
     if (search.trim()) {
@@ -56,7 +56,11 @@ const Header = () => {
             <FaSearch></FaSearch>
           </button>
         </form>
-        <Link to={'/auth'}> <button className='hover:underline cursor-pointer'>Login</button></Link>
+        {isAuth ? <div className='text-4xl cursor-pointer'>
+          <IoPersonCircleOutline />
+        </div> :
+          <Link to={'/auth'}> <button className='hover:underline cursor-pointer'>Login</button></Link>
+        }
       </div>
     </div>
   );

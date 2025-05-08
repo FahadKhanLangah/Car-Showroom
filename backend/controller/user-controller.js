@@ -33,7 +33,8 @@ export const registerUser = async (req, res) => {
     });
     return res.status(200).json({
       success: true,
-      message: `Welcome ${name}, to DB Car Center`
+      message: `Welcome ${name}, to DB Car Center`,
+      token
     })
   } catch (error) {
     return res.status(500).json({
@@ -73,7 +74,9 @@ export const loginUser = async (req, res) => {
     });
     return res.status(200).json({
       success: true,
-      message: `Welcome back ${userExist.name}, to DB Car Center`
+      message: `Welcome back ${userExist.name}, to DB Car Center`,
+      token,
+      user: userExist
     })
   } catch (error) {
     return res.status(500).json({

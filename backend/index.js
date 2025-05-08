@@ -10,7 +10,11 @@ import orderRouter from "./routes/order-route.js";
 config();
 const App = express();
 App.use(express.urlencoded({ extended: false }));
-App.use(cors())
+
+App.use(cors({
+  origin: 'http://localhost:5173', // Your frontend URL
+  credentials: true
+}));
 App.use(cookieParser())
 App.use(express.json())
 connectDB();
