@@ -34,7 +34,7 @@ export const registerUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: `Welcome ${name}, to DB Car Center`,
-      token
+      user
     })
   } catch (error) {
     return res.status(500).json({

@@ -7,12 +7,35 @@ const api = axios.create({
   withCredentials: true
 })
 
+export const registerUser = createAsyncThunk("register", async (form, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append("name", form.name)
+    formData.append("email", form.email)
+    formData.append("city", form.city)
+    formData.append("password", form.password)
+    formData.append("phone", form.phone)
+    formData.append("avatar", form.avatar)
+    const { data } = await api.post("/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    toast.info(data.message);
+    return data;
+  } catch (error) {
+    const message = error.response?.data?.message || 'Login failed'
+    toast.error(message)
+    return rejectWithValue(message);
+  }
+})
+
 export const loadUser = createAsyncThunk("loaduser", async (_, { rejectWithValue }) => {
   try {
     const { data } = await api.get('/user-me');
     return data.user
-  } catch (err) {
-    return rejectWithValue(null)
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || 'Session expired');
   }
 })
 
@@ -20,7 +43,8 @@ export const login = createAsyncThunk("auth/login", async ({ email, password }) 
   try {
     const { data } = await api.post("/login", { email, password })
     toast.info(data?.message)
-    return data;
+    const userData = await api.get('/user-me');
+    return userData.data.user;
   } catch (error) {
     return toast.error(error.response?.data?.message || 'Login failed')
   }
@@ -29,7 +53,6 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
   try {
     const { data } = await api.get("/logout", { withCredentials: true });
     toast.info(data?.message)
-    console.info(data);
   } catch (error) {
     return toast.error(error.response?.data?.message || 'Login failed')
   }
@@ -50,7 +73,18 @@ const authSlice = createSlice({
     }
   },
   extraReducers(builder) {
-    builder.addCase(loadUser.pending, (state) => {
+    builder.addCase(registerUser.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    }).addCase(registerUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.isAuth = true;
+      state.user = action.payload.user
+    }).addCase(registerUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    }).addCase(loadUser.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     })
@@ -61,14 +95,16 @@ const authSlice = createSlice({
       })
       .addCase(loadUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        state.isAuth = false;
+        state.user = null;
       }).addCase(login.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       }).addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.user = action.payload.user,
+        state.user = action.payload,
           state.isAuth = true
       }).addCase(login.rejected, (state, action) => {
         state.isLoading = false;

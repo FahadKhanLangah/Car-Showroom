@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { MdHome } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
-import { login } from '../features/auth/authSlice';
+import { login, registerUser } from '../features/auth/authSlice';
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const dispatch = useDispatch();
@@ -28,8 +28,11 @@ const AuthForm = () => {
         if (meta.requestStatus === 'fulfilled') navigate('/');
       });
     } else {
-      console.log("Helo")
-      console.table(form);
+      dispatch(registerUser(form)).then(({ meta }) => {
+        if (meta.requestStatus === 'fulfilled') {
+          navigate('/')
+        }
+      })
     }
   };
 
