@@ -1,13 +1,18 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { logoutUser } from '../features/auth/authSlice';
+import { loadUser, logoutUser } from '../features/auth/authSlice';
+import { useEffect } from 'react';
 
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuth } = useSelector((state) => state.auth);
   const defaultAvatar = 'https://png.pngtree.com/png-clipart/20190924/original/pngtree-human-avatar-free-vector-png-image_4825373.jpg';
-
+  useEffect(() => {
+    if (!isAuth) {
+      dispatch(loadUser())
+    }
+  }, [dispatch, isAuth])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4">
@@ -58,7 +63,6 @@ const Profile = () => {
                     <InfoCard title="Member Since" value={new Date(user?.createdAt).toLocaleDateString()} icon="calendar" />
                   </div>
                 </div>
-
                 {/* Address Section */}
                 {user?.address && (
                   <div className="bg-gray-50 p-4 rounded-lg">

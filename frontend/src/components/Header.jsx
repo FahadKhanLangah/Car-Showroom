@@ -28,21 +28,20 @@ const Header = () => {
   return (
     <div className='sm:h-20 relative flex sm:flex-row flex-col gap-2 sm:rounded-b-none rounded-b-lg sm:justify-between items-center bg-amber-500'>
       <Navbar showNav={showNav} setShowNav={setShowNav}></Navbar>
-      <div className='flex px-2 sm:px-6 gap-6 mt-2 sm:mt-0 w-full'>
-        <span onClick={handleLogoClick}
+
+      <Link className='flex px-2 sm:px-6 gap-6 mt-2 sm:mt-0 w-full'
+        to={'/'}
+        onClick={() => {
+          dispatch(clearSearchResults());
+          setSearch("");
+        }}
+      >
+        <span
           className='justify-items-start text-4xl rounded-full cursor-pointer'>
           <MdHome />
         </span>
-        <Link
-          to={'/'}
-          onClick={() => {
-            dispatch(clearSearchResults());
-            setSearch("");
-          }}
-        >
-          <h3 className='text-3xl sm:ml-6 bg-none font-bold'>DB Central Motors</h3>
-        </Link>
-      </div>
+        <h3 className='text-3xl sm:ml-6 bg-none font-bold'>DB Central Motors</h3>
+      </Link>
       <div className='mb-2 sm:mb-0 px-2 sm:px-6 flex items-center gap-4'>
         <form onSubmit={handleSearch} className='border-2 rounded-lg px-5 py-3 flex items-center justify-between'>
           <input
@@ -56,9 +55,10 @@ const Header = () => {
             <FaSearch></FaSearch>
           </button>
         </form>
-        {isAuth ? <div className='text-4xl cursor-pointer'>
-          <IoPersonCircleOutline />
-        </div> :
+        {isAuth ?
+          <div className='text-4xl cursor-pointer'>
+            <IoPersonCircleOutline onClick={handleLogoClick} />
+          </div> :
           <Link to={'/auth'}> <button className='hover:underline cursor-pointer'>Login</button></Link>
         }
       </div>

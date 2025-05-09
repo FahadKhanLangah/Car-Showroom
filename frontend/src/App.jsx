@@ -8,11 +8,13 @@ import Dashboard from './pages/DashBoard';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Profile from './pages/Profile';
+import PersistAuth from './components/PersistAuth';
 
 const App = () => {
   return (
     <><ToastContainer position="top-right" />
       <BrowserRouter>
+        <PersistAuth></PersistAuth>
         <Routes>
           <Route path='/' element={<Home />} ></Route>
           <Route path='/car/:id' element={<CarCard />} ></Route>
