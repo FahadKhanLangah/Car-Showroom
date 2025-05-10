@@ -16,35 +16,36 @@ export const searchVehicles = createAsyncThunk(
     const response = await axios.get(`http://localhost:4000/api/v1/search?q=${searchTerm}`);
     return response.data;
   })
-  const initialState = {
-    vehicles: [],
-    totalStock: 0,
-    status: 'idle',
-    error: null,
-    filteredVehicles: [],
-    searchStatus: 'idle',
-    searchError: null
-  }
+const initialState = {
+  vehicles: [],
+  totalStock: 0,
+  status: 'idle',
+  error: null,
+  filteredVehicles: [],
+  searchStatus: 'idle',
+  searchError: null,
+  searchedData: []
+}
 const vehiclesSlice = createSlice({
   name: 'vehicles',
   initialState,
   reducers: {
     sortVehicles: (state, action) => {
-      const targetArray = state.filteredVehicles.length > 0 
-        ? state.filteredVehicles 
+      const targetArray = state.filteredVehicles.length > 0
+        ? state.filteredVehicles
         : state.vehicles;
-        if (action.payload === 'low-to-high') {
-          targetArray.sort((a, b) => a.price - b.price);
-        } else if (action.payload === 'high-to-low') {
-          targetArray.sort((a, b) => b.price - a.price);
-        }
-      },
-      clearSearchResults: (state) => {
-        state.filteredVehicles = [];
-        state.searchStatus = 'idle';
-        state.searchError = null;
+      if (action.payload === 'low-to-high') {
+        targetArray.sort((a, b) => a.price - b.price);
+      } else if (action.payload === 'high-to-low') {
+        targetArray.sort((a, b) => b.price - a.price);
       }
     },
+    clearSearchResults: (state) => {
+      state.filteredVehicles = [];
+      state.searchStatus = 'idle';
+      state.searchError = null;
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchVehicles.pending, (state) => {
@@ -63,7 +64,7 @@ const vehiclesSlice = createSlice({
       })
       .addCase(searchVehicles.fulfilled, (state, action) => {
         state.searchStatus = 'succeeded';
-        state.filteredVehicles = action.payload.vehicles;
+        state.searchedData = action.payload;
       })
       .addCase(searchVehicles.rejected, (state, action) => {
         state.searchStatus = 'failed';
@@ -74,9 +75,9 @@ const vehiclesSlice = createSlice({
 
 export const { sortVehicles, clearSearchResults } = vehiclesSlice.actions;
 
-export const selectAllVehicles = (state) => 
-  state.vehicles.filteredVehicles.length > 0 
-    ? state.vehicles.filteredVehicles 
+export const selectAllVehicles = (state) =>
+  state.vehicles.filteredVehicles.length > 0
+    ? state.vehicles.filteredVehicles
     : state.vehicles.vehicles;
 export const selectVehicleById = (state, vehicleId) =>
   state.vehicles.vehicles.find(vehicle => vehicle._id === vehicleId);

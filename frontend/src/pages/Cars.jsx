@@ -1,10 +1,7 @@
-// src/components/Cars.js
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchVehicles, getTotalStock, getVehiclesError, getVehiclesStatus, selectAllVehicles, sortVehicles } from '../features/vehicles/vehiclesSlice';
-
-
 const Cars = () => {
   const dispatch = useDispatch();
   const vehicles = useSelector(selectAllVehicles);

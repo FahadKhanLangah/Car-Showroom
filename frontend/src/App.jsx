@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import PersistAuth from './components/PersistAuth';
 import AdminAnalytics from './pages/AdminAnalytics';
 import OrdersDashboard from './components/admin/OrdersDashboard';
+import { VehicleSearchResults } from './pages/VehicleSearchResults';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path='/profile' element={<Profile />}></Route>
           <Route path='/admin-analytics' element={<AdminAnalytics />}></Route>
           <Route path='/order-dashboard' element={<OrdersDashboard />} />
+          <Route path='/search-results' element={<VehicleSearchResults/>} />
         </Routes>
       </BrowserRouter>
     </>

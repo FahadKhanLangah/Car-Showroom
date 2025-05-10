@@ -57,7 +57,7 @@ const Navbar = ({ showNav, setShowNav }) => {
       {showNav && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setShowNav(false)}
+          onClick={() => setShowNav(!showNav)}
         />
       )}
 
@@ -65,13 +65,13 @@ const Navbar = ({ showNav, setShowNav }) => {
       <div className={`
         fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-gray-900 to-gray-800
         text-white shadow-2xl z-50 transform transition-all duration-300 ease-in-out
-        ${showNav ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
+        ${showNav ? 'translate-x-0' : '-translate-x-full'}
         flex flex-col
       `}>
         {/* Close Button (Mobile Only) */}
         <button 
-          onClick={() => setShowNav(false)}
-          className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-white transition-colors lg:hidden"
+          onClick={() => setShowNav(!showNav)}
+          className="absolute top-4 w-5 right-4 text-2xl text-gray-400 hover:text-white transition-colors"
         >
           <IoClose />
         </button>
@@ -105,7 +105,7 @@ const Navbar = ({ showNav, setShowNav }) => {
                 key={index}
                 onClick={() => {
                   item.action();
-                  setShowNav(false);
+                  setShowNav(!showNav);
                 }}
                 className="w-full flex items-center px-6 py-3 mb-1 text-left rounded-lg
                 hover:bg-blue-600 hover:bg-opacity-30 hover:text-blue-400
