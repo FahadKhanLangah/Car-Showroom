@@ -32,13 +32,13 @@ const Header = () => {
     <>
       <button 
         onClick={() => setShowNav(!showNav)}
-        className="fixed top-4 left-4 z-50 bg-amber-600 p-2 rounded-full shadow-lg text-white"
+        className="fixed top-4 left-4 z-50 bg-gradient-to-r from-purple-600 to-blue-500 p-2 rounded-full shadow-lg text-white"
       >
         {showNav ? <MdClose size={24} /> : <MdMenu size={24} />}
       </button>
 
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-gradient-to-r from-amber-500 to-amber-600 shadow-lg">
+      <header className="sticky top-0 z-40 bg-gradient-to-r from-amber-500 to-amber-400 shadow-lg">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo and Home Link */}
           <div className="flex items-center space-x-4">
@@ -63,7 +63,7 @@ const Header = () => {
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
                 placeholder="Search your dream car..."
-                className="w-full py-2 px-4 pr-10 rounded-full border-2 border-transparent focus:border-white focus:outline-none shadow-sm transition-all"
+                className="w-full py-2 px-4 pr-10 rounded-full  border-2 border-transparent focus:border-white focus:outline-none shadow-sm transition-all"
               />
               <button 
                 type="submit" 

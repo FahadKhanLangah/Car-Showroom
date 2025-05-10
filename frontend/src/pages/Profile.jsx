@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loadUser, logoutUser } from '../features/auth/authSlice';
 import { useEffect } from 'react';
+import Header from '../components/Header';
 
 
 const Profile = () => {
@@ -15,6 +16,8 @@ const Profile = () => {
   }, [dispatch, isAuth])
 
   return (
+    <>
+    <Header></Header>
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -81,6 +84,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
