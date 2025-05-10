@@ -1,12 +1,15 @@
-import carLogo from '../assets/car_logo.jpg'
-import { IoClose } from "react-icons/io5";
-import { Link, useNavigate } from 'react-router-dom';
+import carLogo from '../assets/car_logo.jpg';
+import { IoClose, IoCarSport, IoPeople, IoAnalytics, IoAddCircle } from "react-icons/io5";
+import { FiUser, FiLogOut } from "react-icons/fi";
+import {  useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../features/auth/authSlice';
+
 const Navbar = ({ showNav, setShowNav }) => {
   const { user } = useSelector(v => v.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -14,36 +17,129 @@ const Navbar = ({ showNav, setShowNav }) => {
       day: 'numeric'
     });
   };
+
+  const navItems = [
+    { 
+      icon: <FiUser className="mr-3" />, 
+      label: 'View Profile', 
+      action: () => navigate('/profile'),
+      forAdmin: false
+    },
+    { 
+      icon: <IoCarSport className="mr-3" />, 
+      label: user?.role === 'admin' ? 'All Cars' : 'My Cars', 
+      action: () => navigate(user?.role === 'admin' ? '/all-cars' : '/my-cars'),
+      forAdmin: false
+    },
+    { 
+      icon: <IoPeople className="mr-3" />, 
+      label: 'All Users', 
+      action: () => navigate('/all-users'),
+      forAdmin: true
+    },
+    { 
+      icon: <IoAddCircle className="mr-3" />, 
+      label: 'Add Vehicle', 
+      action: () => navigate('/add-car'),
+      forAdmin: true
+    },
+    { 
+      icon: <IoAnalytics className="mr-3" />, 
+      label: 'Admin Analytics', 
+      action: () => navigate('/admin-analytics'),
+      forAdmin: true
+    }
+  ];
+
   return (
-    <div className={`absolute sm:left-0 left-0 transition-all ease-in-out duration-300 bg-gray-900 text-white rounded-r-xl sm:top-16 top-28 py-6 min-w-52 ${showNav ? '' : '-translate-x-full'}`}>
-      <h1 className='lg:text-2xl text-gray-200 px-2'>{user?.name}</h1>
-      {user?.role === 'admin' ? (<div className='flex justify-center flex-col px-1 gap-3 items-center my-3'>
-        <img className='h-16 w-16 rounded-full cursor-pointer mb-3' src={user ? user?.avatar : carLogo} alt="" />
-        <button onClick={() => navigate('/profile')} className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>View Profile</button>
-        <Link className='w-full' to={'/order-dashboard'}> <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>All Orders</button></Link>
-        <Link className='w-full' to={'/order-dashboard'}> <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>All Cars</button></Link>
-        <Link className='w-full' to={'/order-dashboard'}> <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>All Users</button></Link>
-        <Link className='w-full' to={'/add-car'}><button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>Add Vehicle </button></Link>
-        <Link className='w-full' to={'/admin-analytics'}><button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>Admin Analysis </button></Link>
-        <button onClick={() => dispatch(logoutUser())} className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>Logout</button>
-        <p>Joined Since <br /> {formatDate(user?.createdAt)}</p>
-        <button onClick={() => setShowNav(!showNav)} className='cursor-pointer text-3xl hover:text-red-500'>
-          <IoClose></IoClose>
+    <>
+      {/* Mobile Overlay */}
+      {showNav && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setShowNav(false)}
+        />
+      )}
+
+      {/* Navbar Container */}
+      <div className={`
+        fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-gray-900 to-gray-800
+        text-white shadow-2xl z-50 transform transition-all duration-300 ease-in-out
+        ${showNav ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
+        flex flex-col
+      `}>
+        {/* Close Button (Mobile Only) */}
+        <button 
+          onClick={() => setShowNav(false)}
+          className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-white transition-colors lg:hidden"
+        >
+          <IoClose />
         </button>
-      </div>) : (
-        <div className='flex justify-center flex-col px-1 gap-3 items-center my-3'>
-          <img className='h-16 w-16 rounded-full cursor-pointer mb-3' src={user ? user?.avatar : carLogo} alt="" />
-          <button onClick={() => navigate('/profile')} className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>View Profile</button>
-          <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>My Cars</button>
-          <Link className='w-full' to={'/my-orders'}> <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>My Orders</button></Link>
-          <button onClick={() => dispatch(logoutUser())} className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>Logout </button>
-          <p>Joined Since <br /> {formatDate(user?.createdAt)}</p>
-          <button onClick={() => setShowNav(!showNav)} className='cursor-pointer text-3xl hover:text-red-500'>
-            <IoClose></IoClose>
+
+        {/* User Profile Section */}
+        <div className="p-6 border-b border-gray-700">
+          <div className="flex flex-col items-center">
+            <img 
+              className="h-20 w-20 rounded-full border-2 border-blue-500 object-cover mb-3"
+              src={user?.avatar || carLogo} 
+              alt="Profile" 
+            />
+            <h2 className="text-xl font-semibold text-center">{user?.name}</h2>
+            {user?.role === 'admin' && (
+              <span className="mt-1 px-2 py-1 bg-blue-600 text-xs rounded-full">
+                ADMIN
+              </span>
+            )}
+            <p className="text-gray-400 text-sm mt-2">
+              Joined {formatDate(user?.createdAt)}
+            </p>
+          </div>
+        </div>
+
+        {/* Scrollable Navigation Links */}
+        <div className="flex-1 py-2">
+          {navItems
+            .filter(item => user?.role === 'admin' ? true : !item.forAdmin)
+            .map((item, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  item.action();
+                  setShowNav(false);
+                }}
+                className="w-full flex items-center px-6 py-3 mb-1 text-left rounded-lg
+                hover:bg-blue-600 hover:bg-opacity-30 hover:text-blue-400
+                transition-all duration-200"
+              >
+                <span className="text-lg">{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
+        </div>
+
+        {/* Fixed Logout Button at Bottom */}
+        <div className="p-4 border-t border-gray-800">
+          <button
+            onClick={() => {
+              dispatch(logoutUser());
+              setShowNav(false);
+            }}
+            className="w-full flex items-center justify-center px-6 py-1 rounded-lg
+            bg-red-600 bg-opacity-20 hover:bg-opacity-30 text-white
+            transition-all duration-200"
+          >
+            <FiLogOut className="mr-3" />
+            <span>Logout</span>
           </button>
         </div>
-      )}
-    </div>
-  )
-}
-export default Navbar
+
+        {/* Footer */}
+        <div className="pb-4 text-center text-xs text-gray-500 border-t border-gray-800">
+          © {new Date().getFullYear()} Car Marketplace
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Navbar;
