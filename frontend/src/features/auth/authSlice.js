@@ -42,9 +42,11 @@ export const loadUser = createAsyncThunk("loaduser", async (_, { rejectWithValue
 export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
   try {
     const { data } = await api.post("/login", { email, password })
-    toast.info(data?.message)
-    const userData = await api.get('/user-me');
-    return userData.data.user;
+    toast.info(data?.message);
+    if (data.success) {
+      const userData = await api.get('/user-me');
+      return userData.data;
+    }
   } catch (error) {
     return toast.error(error.response?.data?.message || 'Login failed')
   }
@@ -65,7 +67,8 @@ const authSlice = createSlice({
     error: null,
     isAuth: false,
     token: null,
-    user: null
+    user: null,
+    success: false
   },
   reducers: {
     clearError: (state) => {
@@ -76,14 +79,17 @@ const authSlice = createSlice({
     builder.addCase(registerUser.pending, (state) => {
       state.isLoading = true;
       state.error = null;
+      state.success = false
     }).addCase(registerUser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
-      state.isAuth = true;
       state.user = action.payload.user
+      state.isAuth = true
+      state.success = true
     }).addCase(registerUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload;
+      state.error = action.payload.message;
+      state.success = action.payload.success
     }).addCase(loadUser.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -92,23 +98,30 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuth = true;
         state.user = action.payload;
+        state.success = true
       })
       .addCase(loadUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
         state.isAuth = false;
         state.user = null;
+        state.success = action.payload.success
       }).addCase(login.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       }).addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.user = action.payload,
+        state.user = action.payload.user
+        if (action.payload.success) {
           state.isAuth = true
+        } else
+          state.isAuth = false,
+            state.success = action.payload.success
       }).addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload.message;
+        state.success = action.payload.success
       }).addCase(logoutUser.pending, (state) => {
         state.isLoading = true,
           state.error = null

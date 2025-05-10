@@ -64,7 +64,7 @@ export const getAllOrders = async (req, res) => {
       userId: order.userId
     }));
 
-    return res.status(404).json({
+    return res.status(200).json({
       success: true,
       orders: formattedOrders
     })

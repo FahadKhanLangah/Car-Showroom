@@ -24,15 +24,17 @@ const AuthForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isLogin) {
-      dispatch(login({ email: form.email, password: form.password })).then(({ meta }) => {
-        if (meta.requestStatus === 'fulfilled') navigate('/');
+      dispatch(login({ email: form.email, password: form.password })).then((action) => {
+        if (action.payload?.success) {
+          navigate('/');
+        }
       });
     } else {
-      dispatch(registerUser(form)).then(({ meta }) => {
-        if (meta.requestStatus === 'fulfilled') {
-          navigate('/')
+      dispatch(registerUser(form)).then((action) => {
+        if (action.payload?.success) {
+          navigate('/');
         }
-      })
+      });
     }
   };
 
