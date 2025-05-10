@@ -55,6 +55,7 @@ export const getAllOrders = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const formattedOrders = orders.map(order => ({
+      _id: order._id,
       buyerName: order.userId?.name,
       carName: `${order.vehicleId?.make} ${order.vehicleId?.model}`,
       carImg: order.vehicleId?.img_url,
@@ -72,6 +73,28 @@ export const getAllOrders = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: error.message
+    })
+  }
+}
+
+export const deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    if (!orderId) {
+      return res.status(404).json({
+        success: false,
+        message: "Order Id is required"
+      })
+    }
+    await orderModel.findByIdAndDelete(orderId);
+    return res.status(201).json({
+      success: true,
+      message: "This Order is deleted successFully",
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
     })
   }
 }

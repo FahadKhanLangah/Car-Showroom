@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Profile from './pages/Profile';
 import PersistAuth from './components/PersistAuth';
 import AdminAnalytics from './pages/AdminAnalytics';
+import OrdersDashboard from './components/admin/OrdersDashboard';
 
 const App = () => {
   return (
@@ -22,8 +23,9 @@ const App = () => {
           <Route path='/add-car' element={<AddCar />}></Route>
           <Route path='/auth' element={<AuthForm />}></Route>
           <Route path='/dashboard' element={<Dashboard />}></Route>
-          <Route path='/profile' element={<Profile/>}></Route>
+          <Route path='/profile' element={<Profile />}></Route>
           <Route path='/admin-analytics' element={<AdminAnalytics />}></Route>
+          <Route path='/order-dashboard' element={<OrdersDashboard />} />
         </Routes>
       </BrowserRouter>
     </>

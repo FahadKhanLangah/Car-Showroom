@@ -26,9 +26,8 @@ const CarCard = () => {
 
   const handleBuyNow = () => {
     setIsPurchasing(true);
-    dispatch(buyVehicle(id)).then(({ meta }) => {
-      console.log(meta);
-      if (meta.requestStatus === 'fulfilled') {
+    dispatch(buyVehicle(id)).then((action) => {
+      if (action.payload?.success) {
         toast.success(`Successfully purchased ${carDetail.make} ${carDetail.model}!`);
         setShowConfirmation(false);
         setIsPurchasing(false);

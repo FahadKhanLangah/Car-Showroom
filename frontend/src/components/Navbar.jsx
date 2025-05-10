@@ -13,7 +13,7 @@ const Navbar = ({ showNav, setShowNav }) => {
         <img className='h-16 w-16 rounded-full cursor-pointer mb-3' src={user ? user?.avatar : carLogo} alt="" />
         <button onClick={() => navigate('/profile')} className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>View Profile</button>
         <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>My Cars</button>
-        <Link className='w-full' to={'/dashboard'}> <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>DashBoard</button></Link>
+        <Link className='w-full' to={'/order-dashboard'}> <button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>Orders</button></Link>
         <Link className='w-full' to={'/add-car'}><button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>   Add Vehicle </button></Link>
         <Link className='w-full' to={'/admin-analytics'}><button className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>   Admin Analysis </button></Link>
         <button onClick={() => dispatch(logoutUser())} className='bg-gray-700 w-full px-2 py-1 rounded cursor-pointer hover:bg-blue-500 duration-300 transition-all'>Logout </button>
