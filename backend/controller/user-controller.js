@@ -125,3 +125,32 @@ export const logout = async (req, res) => {
     })
   }
 }
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const allUsers = await userModel.find();
+    if (!allUsers) {
+      return res.status(200).json({
+        success: false,
+        message: "No user found"
+      })
+    }
+    const formattedUsers = allUsers.map(v => ({
+      _id: v._id,
+      name: v.name,
+      phone: v.phone,
+      city: v.city,
+      email: v.email,
+      avatar: v.avatar
+    }))
+    return res.status(200).json({
+      success: true,
+      users: formattedUsers
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+}

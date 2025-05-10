@@ -30,26 +30,25 @@ const Header = () => {
 
   return (
     <>
-      <button 
-        onClick={() => setShowNav(!showNav)}
-        className="fixed top-4 left-4 z-50 bg-gradient-to-r from-purple-600 to-blue-500 p-2 rounded-full shadow-lg text-white"
-      >
-        {showNav ? <MdClose size={24} /> : <MdMenu size={24} />}
-      </button>
+
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-gradient-to-r from-amber-500 to-amber-400 shadow-lg">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo and Home Link */}
-          <div className="flex items-center space-x-4">
-            <Link 
-              to="/" 
-              onClick={handleLogoClick}
-              className="flex items-center group"
+          <div className="flex items-center gap-2 space-x-4">
+            <button
+              onClick={() => setShowNav(!showNav)}
+              className="fixed top-4 left-4 z-50 bg-gradient-to-r from-purple-600 to-blue-500 p-2 rounded-full shadow-lg text-white"
             >
-              <h1 className="ml-14 text-2xl font-bold text-white hidden sm:block">
-                DB Central Motors
-              </h1>
+              {showNav ? <MdClose size={24} /> : <MdMenu size={24} />}
+            </button>
+            <Link
+              to="/"
+              onClick={handleLogoClick}
+              className="sm:ml-14 text-2xl font-bold text-white hidden sm:block"
+            >
+              DB Central Motors
             </Link>
           </div>
 
@@ -63,10 +62,10 @@ const Header = () => {
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
                 placeholder="Search your dream car..."
-                className="w-full py-2 px-4 pr-10 rounded-full  border-2 border-transparent focus:border-white focus:outline-none shadow-sm transition-all"
+                className="w-full sm:ml-0 ml-4 py-2 px-4 pr-10 rounded-full  border-2 border-transparent focus:border-white focus:outline-none shadow-sm transition-all"
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-amber-600 hover:text-amber-700"
               >
                 <FaSearch />
@@ -78,14 +77,14 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             {isAuth ? (
               <div className="relative group">
-                <button 
+                <button
                   onClick={() => navigate('/profile')}
                   className="flex items-center space-x-2 focus:outline-none"
                 >
                   <div className="relative">
-                    <img 
-                      src={user?.avatar} 
-                      alt="Profile" 
+                    <img
+                      src={user?.avatar}
+                      alt="Profile"
                       className="w-10 h-10 rounded-full border-2 border-white object-cover hover:border-amber-300 transition-all"
                     />
                     <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full w-3 h-3 border-2 border-white"></div>

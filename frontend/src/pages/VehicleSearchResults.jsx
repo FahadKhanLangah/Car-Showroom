@@ -15,14 +15,14 @@ export const VehicleSearchResults = () => {
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-gray-900">Vehicle Search Results</h1>
             <p className="mt-2 text-lg text-gray-600">
-              Found {searchedData.totalResults} {searchedData.totalResults === 1 ? 'vehicle' : 'vehicles'} matching your criteria
+              Found {searchedData?.totalResults} {searchedData?.totalResults === 1 ? 'vehicle' : 'vehicles'} matching your criteria
             </p>
           </div>
 
           {/* Pagination and Filters */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <div className="text-sm text-gray-500">
-              Page {searchedData.currentPage} of {searchedData.totalPages}
+              Page {searchedData?.currentPage} of {searchedData?.totalPages}
             </div>
             <div className="flex gap-2">
               <select className="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -43,7 +43,7 @@ export const VehicleSearchResults = () => {
 
           {/* Vehicle Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {searchedData.vehicles.map((vehicle) => (
+            {searchedData?.vehicles?.map((vehicle) => (
               <div key={vehicle._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 {/* Vehicle Image */}
                 <div className="relative h-48 overflow-hidden">

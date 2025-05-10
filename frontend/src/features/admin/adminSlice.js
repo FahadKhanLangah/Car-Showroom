@@ -16,6 +16,15 @@ export const getAdminAnalytics = createAsyncThunk("admin-analytics", async () =>
     return toast.error(message);
   }
 })
+export const getAllUsers = createAsyncThunk("admin-allUsers", async () => {
+  try {
+    const { data } = await api.get("/get-all-users");
+    return data.users;
+  } catch (error) {
+    const message = error.response?.data?.message
+    return toast.error(message);
+  }
+})
 export const addNewVehicle = createAsyncThunk("add-new-vehicle", async (formData) => {
   try {
     const { data } = await api.post("/add-new-vehicle", formData);
@@ -38,7 +47,8 @@ const initialState = {
   regularCustomers: [],
   lowStockVehicles: [],
   error: null,
-  isLoading: false
+  isLoading: false,
+  users: []
 }
 const adminSlice = createSlice({
   name: "admin",
@@ -71,7 +81,17 @@ const adminSlice = createSlice({
     }).addCase(addNewVehicle.fulfilled, (state) => {
       state.error = null,
         state.isLoading = false
-    }).addCase(addNewVehicle.rejected, (state,action) => {
+    }).addCase(addNewVehicle.rejected, (state, action) => {
+      state.error = action.payload.error,
+        state.isLoading = false
+    }).addCase(getAllUsers.pending, (state) => {
+      state.error = null,
+        state.isLoading = true
+    }).addCase(getAllUsers.fulfilled, (state, action) => {
+      state.error = null,
+        state.isLoading = false,
+        state.users = action.payload
+    }).addCase(getAllUsers.rejected, (state, action) => {
       state.error = action.payload.error,
         state.isLoading = false
     })

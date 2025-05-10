@@ -34,14 +34,14 @@ const AdminAnalytics = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
-            route="/order-dashboard"
+            route="/all-users"
             title="Total Users"
             value={totalUsers}
             icon={<FaUsers className="text-blue-500" size={24} />}
             color="bg-blue-50"
           />
           <StatCard
-            route="/order-dashboard"
+            route="/all-cars"
             title="Total Vehicles"
             value={totalVehicles}
             icon={<IoCarSport className="text-green-500" size={24} />}
