@@ -1,21 +1,55 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
+const api = axios.create({
+  baseURL: "http://localhost:4000/api/v1",
+  withCredentials: true
+})
 
 export const fetchVehicles = createAsyncThunk(
   'vehicles/fetchVehicles',
   async () => {
-    const response = await axios.get('http://localhost:4000/api/v1/get-all-vehicles');
-    return response.data;
+    try {
+      const response = await api.get('/get-all-vehicles');
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message
+      return toast.error(message);
+    }
   }
 );
 
 export const searchVehicles = createAsyncThunk(
   'vehicles/searchVehicles',
   async (searchTerm) => {
-    const response = await axios.get(`http://localhost:4000/api/v1/search?q=${searchTerm}`);
-    return response.data;
+    try {
+      const response = await api.get(`/search?q=${searchTerm}`);
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message
+      return toast.error(message);
+    }
   })
+
+export const updateCar = createAsyncThunk("update-vehicle", async (formdata) => {
+  try {
+    const { data } = await api.put(`/update-car`, { formdata });
+    return toast.success(data.message)
+  } catch (error) {
+    const message = error.response?.data?.message
+    return toast.error(message);
+  }
+})
+export const deleteCar = createAsyncThunk("delete-vehicle", async (id) => {
+  try {
+    const { data } = await api.delete(`/delete-car/${id}`);
+    return toast.success(data.message)
+  } catch (error) {
+    const message = error.response?.data?.message
+    return toast.error(message);
+  }
+})
 const initialState = {
   vehicles: [],
   totalStock: 0,
@@ -68,6 +102,24 @@ const vehiclesSlice = createSlice({
       })
       .addCase(searchVehicles.rejected, (state, action) => {
         state.searchStatus = 'failed';
+        state.searchError = action.error.message;
+      }).addCase(updateCar.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateCar.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(updateCar.rejected, (state, action) => {
+        state.status = 'failed';
+        state.searchError = action.error.message;
+      }).addCase(deleteCar.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteCar.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(deleteCar.rejected, (state, action) => {
+        state.status = 'failed';
         state.searchError = action.error.message;
       });
   }

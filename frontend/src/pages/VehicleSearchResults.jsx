@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 export const VehicleSearchResults = () => {
   const { searchedData } = useSelector(v => v.vehicles);
-  console.log(searchedData);
   return (
     <div className="min-h-screen bg-gray-50 ">
       <Header></Header>

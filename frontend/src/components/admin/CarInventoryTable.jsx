@@ -1,17 +1,15 @@
 import { FaTrash, FaEdit, FaArrowUp, FaArrowDown, FaCar } from 'react-icons/fa';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { IoArrowBack } from 'react-icons/io5';
+import { deleteCar, fetchVehicles, updateCar } from '../../features/vehicles/vehiclesSlice';
 
 const CarInventoryTable = () => {
   const { vehicles: cars } = useSelector(state => state.vehicles);
 
-  // Local state for sorting and editing
   const [sortConfig, setSortConfig] = useState({ key: 'sold', direction: 'desc' });
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ price: 0, stock: 0 });
-
-  // Create a sorted copy of the cars array
   const sortedCars = [...cars].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === 'asc' ? -1 : 1;
@@ -42,23 +40,30 @@ const CarInventoryTable = () => {
       [name]: name === 'price' || name === 'stock' ? Number(value) : value
     }));
   };
-  const onUpdateCar = (id) => {
-    console.log(id)
-  }
+  const dispatch = useDispatch();
+
   const onDeleteCar = (id) => {
-    console.log(id);
+    dispatch(deleteCar(id));
+    dispatch(fetchVehicles());
   }
   const handleSave = (id) => {
-    const updatedCar = { ...cars.find(car => car._id === id), ...editForm };
-    onUpdateCar(updatedCar);
+    const formdata = {
+      stock: editForm.stock,
+      price: editForm.price,
+      id
+    }
+    dispatch(updateCar(formdata));
     setEditingId(null);
+    dispatch(fetchVehicles());
   };
 
   const getSortIcon = (key) => {
     if (sortConfig.key !== key) return null;
     return sortConfig.direction === 'asc' ? <FaArrowUp className="ml-1" /> : <FaArrowDown className="ml-1" />;
   };
-
+  useEffect(() => {
+    dispatch(fetchVehicles());
+  }, [dispatch])
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">

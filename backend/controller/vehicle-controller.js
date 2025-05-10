@@ -196,4 +196,64 @@ export const getRecommendedCars = async (req, res) => {
   }
 };
 
+export const updateCar = async (req, res) => {
+  try {
+    const { formdata } = req.body;
+    const vid = formdata.id;
+    if (!vid) {
+      return res.status(404).json({
+        success: false,
+        message: "No id is provided"
+      })
+    }
+    const updateFields = {};
+    if (formdata.stock !== undefined) {
+      updateFields.stock = Number(formdata.stock);
+    }
+    if (formdata.price !== undefined) {
+      updateFields.price = Number(formdata.price);
+    }
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No valid fields provided for update"
+      });
+    }
+    const updatedCar = await vehicleModel.findByIdAndUpdate(
+      { _id: vid },
+      updateFields,
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Car information updated successfully",
+      car: updatedCar
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteCar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(200).json({
+        success: true,
+        message: "No car id is provided",
+      });
+    }
+    await vehicleModel.findByIdAndDelete(id);
+    return res.status(200).json({
+      success: true,
+      message: "Car Deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
 
