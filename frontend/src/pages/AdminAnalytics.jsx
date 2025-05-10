@@ -1,4 +1,4 @@
-import React, {  useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Card, StatCard, CustomerCard, VehicleCard } from '../components/DashBoardCards';
 import { FaUsers } from "react-icons/fa6";
 import { IoArrowBack, IoCarSport } from "react-icons/io5";
@@ -7,6 +7,7 @@ import { FaChartPie } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux'
 import { getAdminAnalytics } from '../features/admin/adminSlice';
 const AdminAnalytics = () => {
+
   const {
     totalUsers,
     totalVehicles,
@@ -26,31 +27,35 @@ const AdminAnalytics = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className='flex items-center gap-6 mb-8'>
-          <button onClick={()=>window.history.back()} className='text-3xl cursor-pointer hover:scale-110'>
-          <IoArrowBack></IoArrowBack>
-        </button>
-        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+          <button onClick={() => window.history.back()} className='text-3xl cursor-pointer hover:scale-110'>
+            <IoArrowBack></IoArrowBack>
+          </button>
+          <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
+            route="/order-dashboard"
             title="Total Users"
             value={totalUsers}
             icon={<FaUsers className="text-blue-500" size={24} />}
             color="bg-blue-50"
           />
           <StatCard
+            route="/order-dashboard"
             title="Total Vehicles"
             value={totalVehicles}
             icon={<IoCarSport className="text-green-500" size={24} />}
             color="bg-green-50"
           />
           <StatCard
+            route="/order-dashboard"
             title="Total Orders"
             value={totalOrders}
             icon={<FaChartPie className="text-purple-500" size={24} />}
             color="bg-purple-50"
           />
           <StatCard
+            route="/order-dashboard"
             title="Total Profit"
             value={`PKR ${totalProfit}`}
             icon={<FaRupeeSign className="text-yellow-500" size={24} />}
