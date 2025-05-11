@@ -7,28 +7,35 @@ import { FaChartPie } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux'
 import { getAdminAnalytics } from '../features/admin/adminSlice';
 import Loader from '../components/Loader';
+import SalesChart from '../components/SalesChart';
 const AdminAnalytics = () => {
 
   const {
     totalUsers,
     totalVehicles,
-    // totalOrders,
+    totalOrders,
     salesLast7Days,
     salesLast30Days,
     totalProfit,
     mostSellingCars = [],
     regularCustomers = [],
-    lowStockVehicles = [],
+    lowStockVehicles,
     isLoading
   } = useSelector(v => v.admin);
-  const { orders } = useSelector(v => v.order)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAdminAnalytics())
   }, [dispatch]);
-  if (isLoading) {
-      return (<Loader/>)
+  const MillionConvertor = (rupees) => {
+    if (rupees >=1000000) {
+      return `${(rupees/1000000).toFixed(0,2)} M`
+    } else {
+      return rupees.toLocaleString();
     }
+  }
+  if (isLoading) {
+    return (<Loader />)
+  }
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -56,14 +63,14 @@ const AdminAnalytics = () => {
           <StatCard
             route="/order-dashboard"
             title="Total Orders"
-            value={orders?.length}
+            value={totalOrders}
             icon={<FaChartPie className="text-purple-500" size={24} />}
             color="bg-purple-50"
           />
           <StatCard
             route="/order-dashboard"
             title="Total Profit"
-            value={`PKR ${totalProfit}`}
+            value={`PKR ${totalProfit?.toLocaleString()}`}
             icon={<FaRupeeSign className="text-yellow-500" size={24} />}
             color="bg-yellow-50"
           />
@@ -94,7 +101,9 @@ const AdminAnalytics = () => {
               <div className="h-64 flex items-center justify-center">
                 <p className="text-gray-500">
                   {salesLast7Days.length > 0 || salesLast30Days.length > 0
-                    ? "Sales charts would render here"
+                    ? (
+                      <SalesChart/>
+                    )
                     : "No sales data available"}
                 </p>
               </div>

@@ -11,14 +11,12 @@ export const adminAnalyticsController = async (req, res) => {
     const totalVehicles = await vehicleModel.countDocuments();
 
     // Total Orders
-    const totalOrders = await orderModel.countDocuments({ paymentStatus: "completed" });
+    const totalOrders = await orderModel.countDocuments();
 
     // Total Sales & Profit
-    const orders = await orderModel.find({ paymentStatus: "completed" });
+    const orders = await orderModel.find();
     const totalSales = orders.reduce((acc, order) => acc + order.priceAtPurchase, 0);
-    const totalProfit = totalSales * 0.15; // Assume 15% profit margin
-
-    // Most Selling Cars (Top 5)
+    const totalProfit = totalSales * 0.06;
     const mostSellingCars = await orderModel.aggregate([
       {
         $group: {
@@ -47,8 +45,6 @@ export const adminAnalyticsController = async (req, res) => {
         }
       }
     ]);
-
-    // Regular Customers (Top 5 users by order count)
     const regularCustomers = await orderModel.aggregate([
       {
         $group: {
@@ -76,11 +72,9 @@ export const adminAnalyticsController = async (req, res) => {
         }
       }
     ]);
-
-    // Sales in last 7 days, last 30 days
     const now = new Date();
     const last7Days = new Date(now);
-    last7Days.setDate(now.getDate() - 7);
+    last7Days.setDate(now.getDate() - 1);
 
     const last30Days = new Date(now);
     last30Days.setDate(now.getDate() - 30);
@@ -89,7 +83,6 @@ export const adminAnalyticsController = async (req, res) => {
       {
         $match: {
           createdAt: { $gte: last7Days },
-          paymentStatus: "completed"
         }
       },
       {
@@ -106,7 +99,6 @@ export const adminAnalyticsController = async (req, res) => {
       {
         $match: {
           createdAt: { $gte: last30Days },
-          paymentStatus: "completed"
         }
       },
       {
@@ -118,8 +110,6 @@ export const adminAnalyticsController = async (req, res) => {
       },
       { $sort: { _id: 1 } }
     ]);
-
-    // Low Stock Vehicles
     const lowStockVehicles = await vehicleModel.find({ stock: { $lt: 5 } }).select("make model stock");
 
     res.status(200).json({
