@@ -3,11 +3,12 @@ import { FiTrash2, FiSearch, FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { IoArrowBack } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteOrder, getAllOrders } from '../../features/order/orderSlice';
+import Loader from '../Loader';
 const OrdersDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'orderDate', direction: 'desc' });
   const dispatch = useDispatch();
-  const { orders } = useSelector(v => v.order)
+  const { orders, isLoading } = useSelector(v => v.order)
   useEffect(() => {
     dispatch(getAllOrders())
   }, [dispatch]);
@@ -55,6 +56,9 @@ const OrdersDashboard = () => {
       maximumFractionDigits: 0
     }).format(price);
   };
+  if (isLoading) {
+    return (<Loader />)
+  }
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">

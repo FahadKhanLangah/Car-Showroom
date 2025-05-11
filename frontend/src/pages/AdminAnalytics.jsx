@@ -6,23 +6,29 @@ import { FaRupeeSign } from "react-icons/fa6";
 import { FaChartPie } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux'
 import { getAdminAnalytics } from '../features/admin/adminSlice';
+import Loader from '../components/Loader';
 const AdminAnalytics = () => {
 
   const {
     totalUsers,
     totalVehicles,
-    totalOrders,
+    // totalOrders,
     salesLast7Days,
     salesLast30Days,
     totalProfit,
     mostSellingCars = [],
     regularCustomers = [],
-    lowStockVehicles = []
+    lowStockVehicles = [],
+    isLoading
   } = useSelector(v => v.admin);
+  const { orders } = useSelector(v => v.order)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAdminAnalytics())
   }, [dispatch]);
+  if (isLoading) {
+      return (<Loader/>)
+    }
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -50,7 +56,7 @@ const AdminAnalytics = () => {
           <StatCard
             route="/order-dashboard"
             title="Total Orders"
-            value={totalOrders}
+            value={orders?.length}
             icon={<FaChartPie className="text-purple-500" size={24} />}
             color="bg-purple-50"
           />

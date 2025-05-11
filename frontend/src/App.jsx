@@ -13,6 +13,7 @@ import OrdersDashboard from './components/admin/OrdersDashboard';
 import { VehicleSearchResults } from './pages/VehicleSearchResults';
 import { UserManagementTable } from './pages/UserManagementTable';
 import CarInventoryTable from './components/admin/CarInventoryTable';
+import MyOrders from './pages/MyOrders';
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route path='/search-results' element={<VehicleSearchResults/>} />
           <Route path='/all-users' element={<UserManagementTable/>} />
           <Route path='/all-cars' element={<CarInventoryTable/>} />
+          <Route path='/my-cars' element={<MyOrders/>} />
         </Routes>
       </BrowserRouter>
     </>

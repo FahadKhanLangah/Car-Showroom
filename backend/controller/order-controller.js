@@ -98,3 +98,38 @@ export const deleteOrder = async (req, res) => {
     })
   }
 }
+
+export const getMyOrders = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const orders = await orderModel.find({ userId: id }).populate({
+      path: "userId",
+      select: "name"
+    })
+      .populate({
+        path: "vehicleId",
+        select: "make model img_url"
+      })
+      .sort({ createdAt: -1 });
+
+    const formattedOrders = orders.map(order => ({
+      _id: order._id,
+      buyerName: order.userId?.name,
+      carName: `${order.vehicleId?.make} ${order.vehicleId?.model}`,
+      carImg: order.vehicleId?.img_url,
+      orderDate: order.createdAt,
+      price: order.priceAtPurchase,
+      carId: order.vehicleId,
+      userId: order.userId
+    }));
+    return res.status(200).json({
+      success: true,
+      orders: formattedOrders
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+}

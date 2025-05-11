@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from '../features/admin/adminSlice';
 import Header from '../components/Header';
+import Loader from '../components/Loader';
 export const UserManagementTable = () => {
-  const { users } = useSelector(v => v.admin);
+  const { users, isLoading } = useSelector(v => v.admin);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllUsers());
@@ -18,6 +19,9 @@ export const UserManagementTable = () => {
   );
   const handleDelete = (id) => {
     console.log(id);
+  }
+  if (isLoading) {
+    return (<Loader />)
   }
   return (
     <>

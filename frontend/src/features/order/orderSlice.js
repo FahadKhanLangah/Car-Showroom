@@ -31,12 +31,22 @@ export const getAllOrders = createAsyncThunk("order/get-all", async () => {
     return toast.error(error.response?.data?.message);
   }
 })
+export const getMyCars = createAsyncThunk("order/get-my-orders", async () => {
+  try {
+    const { data } = await api.get('/get-my-orders');
+    console.log(data)
+    return data.orders
+  } catch (error) {
+    return toast.error(error.response?.data?.message);
+  }
+})
 const orderSlice = createSlice({
   name: "order",
   initialState: {
     isLoading: false,
     error: null,
-    orders: []
+    orders: [],
+    myOrders: []
   },
   reducers: {},
   extraReducers(builder) {
@@ -66,6 +76,16 @@ const orderSlice = createSlice({
       state.isLoading = false,
         state.error = null
     }).addCase(deleteOrder.rejected, (state, action) => {
+      state.isLoading = false,
+        state.error = action.payload.error.response?.data?.messageF
+    }).addCase(getMyCars.pending, (state) => {
+      state.isLoading = true,
+        state.error = null
+    }).addCase(getMyCars.fulfilled, (state, action) => {
+      state.isLoading = false,
+        state.error = null,
+        state.myOrders = action.payload
+    }).addCase(getMyCars.rejected, (state, action) => {
       state.isLoading = false,
         state.error = action.payload.error.response?.data?.messageF
     })
