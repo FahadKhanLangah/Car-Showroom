@@ -8,7 +8,6 @@ const Home = () => {
     <>
     <Header></Header>
     <Cars></Cars>
-    <Footer></Footer>
     </>
   )
 }
