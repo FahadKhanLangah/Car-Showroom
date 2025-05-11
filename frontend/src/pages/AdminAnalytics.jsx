@@ -97,14 +97,10 @@ const AdminAnalytics = () => {
                 <p className="text-gray-500 text-center py-4">No sales data available</p>
               )}
             </Card>
-            {salesLast7Days.length > 0 || salesLast30Days.length > 0
-              && (
-                <SalesCardWrapper
-                  salesLast7Days={salesLast7Days}
-                  salesLast30Days={salesLast30Days}
-                />
-              )
-              }
+            <SalesCardWrapper
+              salesLast7Days={salesLast7Days}
+              salesLast30Days={salesLast30Days}
+            />
           </div>
           <div className="space-y-6">
             <Card title="Regular Customers">

@@ -6,7 +6,6 @@ const api = axios.create({
   baseURL: "http://localhost:4000/api/v1",
   withCredentials: true
 })
-
 export const getAdminAnalytics = createAsyncThunk("admin-analytics", async () => {
   try {
     const { data } = await api.get("/admin-analytics");
@@ -35,6 +34,16 @@ export const addNewVehicle = createAsyncThunk("add-new-vehicle", async (formData
     return toast.error(message);
   }
 })
+export const updateUserRole = createAsyncThunk("admin/role", async ({ id, role }) => {
+  try {
+    const { data } = await api.patch("/update-user-role", { id, role })
+    toast.info(data?.message);
+    return data
+  } catch (error) {
+    return toast.error(error.response?.data?.message || 'Login failed')
+  }
+})
+
 const initialState = {
   totalUsers: 0,
   totalVehicles: 0,
@@ -93,6 +102,18 @@ const adminSlice = createSlice({
         state.isLoading = false,
         state.users = action.payload
     }).addCase(getAllUsers.rejected, (state, action) => {
+      state.error = action.payload.error,
+        state.isLoading = false
+    }).addCase(updateUserRole.pending, (state) => {
+      state.error = null,
+        state.isLoading = true
+    }).addCase(updateUserRole.fulfilled, (state, action) => {
+      const updatedUser = action.payload.updatedUser;
+      state.users = state.users.map(user =>
+        user._id === updatedUser._id ? updatedUser : user
+      );
+      state.isLoading = false
+    }).addCase(updateUserRole.rejected, (state, action) => {
       state.error = action.payload.error,
         state.isLoading = false
     })

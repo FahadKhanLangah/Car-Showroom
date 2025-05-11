@@ -21,7 +21,10 @@ import Loader from './components/Loader';
 
 const App = () => {
   const ProtectedRoute = ({ children, requiredRole }) => {
-    const { user } = useSelector(v => v.auth);
+    const { user , isLoading } = useSelector(v => v.auth);
+    if (isLoading) {
+      return <Loader></Loader>
+    }
     if (requiredRole && user?.role !== requiredRole) {
       return <Navigate to="/not-authorized" replace />;
     }

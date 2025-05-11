@@ -141,7 +141,8 @@ export const getAllUsers = async (req, res) => {
       phone: v.phone,
       city: v.city,
       email: v.email,
-      avatar: v.avatar
+      avatar: v.avatar,
+      role: v.role
     }))
     return res.status(200).json({
       success: true,
@@ -151,6 +152,31 @@ export const getAllUsers = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: error
+    })
+  }
+}
+
+export const updateUserRole = async (req, res) => {
+  const { id, role } = req.body;
+  try {
+    const user = await userModel.findByIdAndUpdate(id,
+      { role },
+      { new: true });
+    if (!user) {
+      return res.status(409).json({
+        success: false,
+        message: `User does not exist`
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: `${user.name} is now become the ${role}`,
+      updatedUser: user
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
     })
   }
 }

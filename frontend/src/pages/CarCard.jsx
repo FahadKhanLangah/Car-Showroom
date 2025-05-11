@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 const CarCard = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAuth } = useSelector(v => v.auth)
   const dispatch = useDispatch();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -25,6 +26,9 @@ const CarCard = () => {
   }, [status, dispatch]);
 
   const handleBuyNow = () => {
+    if (!isAuth) {
+      navigate('/auth')
+    }
     setIsPurchasing(true);
     dispatch(buyVehicle(id)).then((action) => {
       if (action.payload?.success) {

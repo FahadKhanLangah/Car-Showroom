@@ -1,25 +1,40 @@
-import { FaTrash, FaEdit, FaUserCircle, FaSearch } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaUserCircle, FaSearch, FaSave } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../features/admin/adminSlice';
+import { getAllUsers, updateUserRole } from '../features/admin/adminSlice';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
+import { MdCancel } from 'react-icons/md';
 export const UserManagementTable = () => {
   const { users, isLoading } = useSelector(v => v.admin);
+  const [role, setRole] = useState('');
+  const [editId, setEditId] = useState(null);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllUsers());
-  }, [dispatch])
+  }, [dispatch]);
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users && users.length > 0 && users?.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.phone.includes(searchTerm) ||
-    user.city.toLowerCase().includes(searchTerm.toLowerCase())
+    user.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const handleDelete = (id) => {
     console.log(id);
   }
+  const handleUpdate = (id) => {
+    setEditId(id)
+  }
+  const handleSave = (id) => {
+    const formData = {
+      role, id
+    }
+    dispatch(updateUserRole(formData))
+    setEditId(null);
+  }
+
   if (isLoading) {
     return (<Loader />)
   }
@@ -35,7 +50,6 @@ export const UserManagementTable = () => {
               Manage all registered users in the system
             </p>
           </div>
-
           {/* Search and Actions */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <div className="relative w-full sm:w-64">
@@ -58,6 +72,9 @@ export const UserManagementTable = () => {
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       User
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Role
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Contact
@@ -90,6 +107,17 @@ export const UserManagementTable = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
+                          {editId !== user._id ? (<div className={`${user.role === 'admin' ? "text-sm font-semibold text-green-700" : "text-sm text-gray-900"}`}>{user.role}</div>) : (
+                            <>
+                              <select value={role} onChange={e => setRole(e.target.value)}>
+                                <option value="">Select a role</option>
+                                <option value="admin">admin</option>
+                                <option value="user">user</option>
+                              </select>
+                            </>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">{user.phone}</div>
                           <div className="text-sm text-gray-500">{user.email}</div>
                         </td>
@@ -98,18 +126,41 @@ export const UserManagementTable = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
-                            <button
-                              className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50"
-                              onClick={() => console.log('Edit', user._id)}
-                            >
-                              <FaEdit className="h-5 w-5" />
-                            </button>
-                            <button
-                              className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50"
-                              onClick={() => handleDelete(user._id)}
-                            >
-                              <FaTrash className="h-5 w-5" />
-                            </button>
+                            {
+                              editId === user?._id ? (
+                                <button
+                                  className="text-green-600 cursor-pointer hover:text-blue-900 p-1 rounded-full hover:bg-blue-50"
+                                  onClick={() => handleSave(user._id)}
+                                >
+                                  <FaSave className="h-5 w-5" />
+                                </button>
+                              ) : (
+                                <button
+                                  className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50"
+                                  onClick={() => handleUpdate(user._id)}
+                                >
+                                  <FaEdit className="h-5 w-5" />
+                                </button>
+                              )
+                            }
+                            {
+                              editId === user?._id ? (
+                                <button
+                                  className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50"
+                                  onClick={() => setEditId(null)}
+                                >
+                                  <MdCancel className="h-5 w-5" />
+                                </button>
+                              ) : (
+                                <button
+                                  className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50"
+                                  onClick={() => handleDelete(user._id)}
+                                >
+                                  <FaTrash className="h-5 w-5" />
+                                </button>
+                              )
+                            }
+
                           </div>
                         </td>
                       </tr>
@@ -144,7 +195,7 @@ export const UserManagementTable = () => {
             </div>
           )}
         </div>
-      </div>
+      </div >
     </>
   );
 };
