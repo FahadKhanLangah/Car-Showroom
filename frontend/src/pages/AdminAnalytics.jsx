@@ -7,7 +7,7 @@ import { FaChartPie } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux'
 import { getAdminAnalytics } from '../features/admin/adminSlice';
 import Loader from '../components/Loader';
-import SalesChart from '../components/SalesChart';
+import SalesCardWrapper from '../components/SalesCardWrapper';
 const AdminAnalytics = () => {
 
   const {
@@ -27,8 +27,8 @@ const AdminAnalytics = () => {
     dispatch(getAdminAnalytics())
   }, [dispatch]);
   const MillionConvertor = (rupees) => {
-    if (rupees >=1000000) {
-      return `${(rupees/1000000).toFixed(0,2)} M`
+    if (rupees >= 1000000) {
+      return `${(rupees / 1000000).toFixed(0, 2)} M`
     } else {
       return rupees.toLocaleString();
     }
@@ -97,17 +97,14 @@ const AdminAnalytics = () => {
                 <p className="text-gray-500 text-center py-4">No sales data available</p>
               )}
             </Card>
-            <Card title="Sales Performance">
-              <div className="h-64 flex items-center justify-center">
-                <p className="text-gray-500">
-                  {salesLast7Days.length > 0 || salesLast30Days.length > 0
-                    ? (
-                      <SalesChart/>
-                    )
-                    : "No sales data available"}
-                </p>
-              </div>
-            </Card>
+            {salesLast7Days.length > 0 || salesLast30Days.length > 0
+              ? (
+                <SalesCardWrapper
+                  salesLast7Days={salesLast7Days}
+                  salesLast30Days={salesLast30Days}
+                />
+              )
+              : "No sales data available"}
           </div>
           <div className="space-y-6">
             <Card title="Regular Customers">
