@@ -11,8 +11,8 @@ import {
 import { FaChartLine, FaDollarSign, FaShoppingCart } from 'react-icons/fa';
 import { format, subDays } from 'date-fns';
 import { useState } from 'react';
-import { Card } from './DashBoardCards';
 import { FaRupeeSign } from 'react-icons/fa6';
+import Card from './util/Card';
 
 // Register Chart.js components
 ChartJS.register(
@@ -185,3 +185,4 @@ const SalesCardWrapper = ({ salesLast7Days, salesLast30Days }) => (
 );
 
 export default SalesCardWrapper
+

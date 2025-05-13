@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { Card, StatCard, CustomerCard, VehicleCard } from '../components/DashBoardCards';
+import { useEffect } from 'react';
 import { FaUsers } from "react-icons/fa6";
 import { IoArrowBack, IoCarSport } from "react-icons/io5";
 import { FaRupeeSign } from "react-icons/fa6";
@@ -8,8 +7,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getAdminAnalytics } from '../features/admin/adminSlice';
 import Loader from '../components/Loader';
 import SalesCardWrapper from '../components/SalesCardWrapper';
+import Card from '../components/util/Card';
+import StatCard from '../components/util/StatCard';
+import VehicleCard from '../components/util/VehicleCard';
+import CustomerCard from '../components/util/CustomerCard';
 const AdminAnalytics = () => {
-
   const {
     totalUsers,
     totalVehicles,
