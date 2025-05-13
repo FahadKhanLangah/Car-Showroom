@@ -2,19 +2,23 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchVehicles, getTotalStock, getVehiclesError, getVehiclesStatus, selectAllVehicles, sortVehicles } from '../features/vehicles/vehiclesSlice';
+import Loader from '../components/Loader';
 const Cars = () => {
   const dispatch = useDispatch();
   const vehicles = useSelector(selectAllVehicles);
   const status = useSelector(getVehiclesStatus);
   const error = useSelector(getVehiclesError);
   const totalStock = useSelector(getTotalStock);
+  const { isLoading } = useSelector(v => v.vehicles)
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchVehicles());
     }
   }, [status, dispatch]);
-
+  if (isLoading) {
+    return <Loader></Loader>
+  }
   const handleSortChange = (e) => {
     dispatch(sortVehicles(e.target.value));
   };
@@ -44,10 +48,10 @@ const Cars = () => {
         {vehicles.map((vehicle) => (
           <Link key={vehicle._id} to={`/car/${vehicle._id}`}>
             <div className='h-40 p-3 flex flex-col justify-center items-center hover:bg-amber-100 overflow-hidden w-36 sm:w-40 mb-4'>
-              <img 
-                className='h-[70%] max-w-full object-cover rounded-sm' 
-                src={vehicle.img_url} 
-                alt={`${vehicle.make} ${vehicle.model}`} 
+              <img
+                className='h-[70%] max-w-full object-cover rounded-sm'
+                src={vehicle.img_url}
+                alt={`${vehicle.make} ${vehicle.model}`}
               />
               <span>
                 <h1 className='font-semibold'>{vehicle.make} {vehicle.model}</h1>

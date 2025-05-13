@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const api = axios.create({
-  baseURL: "http://localhost:4000/api/v1",
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: true
 })
 
@@ -58,7 +58,8 @@ const initialState = {
   filteredVehicles: [],
   searchStatus: 'idle',
   searchError: null,
-  searchedData: []
+  searchedData: [],
+  isLoading : false
 }
 const vehiclesSlice = createSlice({
   name: 'vehicles',
@@ -84,15 +85,18 @@ const vehiclesSlice = createSlice({
     builder
       .addCase(fetchVehicles.pending, (state) => {
         state.status = 'loading';
+        state.isLoading = true
       })
       .addCase(fetchVehicles.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.vehicles = action.payload.vehicles;
         state.totalStock = action.payload.totalStock;
+        state.isLoading = false
       })
       .addCase(fetchVehicles.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+        state.isLoading = false
       }).addCase(searchVehicles.pending, (state) => {
         state.searchStatus = 'loading';
       })

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 const api = axios.create({
-  baseURL: "http://localhost:4000/api/v1",
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: true
 })
 export const buyVehicle = createAsyncThunk("order/add", async (id) => {
