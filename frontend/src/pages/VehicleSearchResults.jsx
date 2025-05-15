@@ -23,21 +23,6 @@ export const VehicleSearchResults = () => {
             <div className="text-sm text-gray-500">
               Page {searchedData?.currentPage} of {searchedData?.totalPages}
             </div>
-            <div className="flex gap-2">
-              <select className="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>Sort by: Price (Low to High)</option>
-                <option>Sort by: Price (High to Low)</option>
-                <option>Sort by: Newest</option>
-                <option>Sort by: Horsepower</option>
-              </select>
-              <select className="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>Filter by: All Types</option>
-                <option>Sedan</option>
-                <option>SUV</option>
-                <option>Truck</option>
-                <option>Coupe</option>
-              </select>
-            </div>
           </div>
 
           {/* Vehicle Grid */}
