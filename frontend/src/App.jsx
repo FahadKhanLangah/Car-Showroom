@@ -43,6 +43,7 @@ const App = () => {
           <Route path='/car/:id' element={<CarCard />} ></Route>
           <Route path='/add-car' element={<AddCar />}></Route>
           <Route path='/auth' element={<AuthForm />}></Route>
+          <Route path='/search-results' element={<VehicleSearchResults />}></Route>
           <Route path='/profile' element={
             <ProtectedRoute>
               <Profile />
@@ -56,10 +57,6 @@ const App = () => {
           <Route path='/order-dashboard' element={
             <ProtectedRoute requiredRole='admin'>
               <OrdersDashboard />
-            </ProtectedRoute>} />
-          <Route path='/search-results' element={
-            <ProtectedRoute requiredRole='admin'>
-              <VehicleSearchResults />
             </ProtectedRoute>} />
           <Route path='/all-users' element={
             <ProtectedRoute requiredRole='admin'>

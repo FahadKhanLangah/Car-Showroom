@@ -23,6 +23,7 @@ export const VehicleSearchResults = () => {
             <div className="text-sm text-gray-500">
               Page {searchedData?.currentPage} of {searchedData?.totalPages}
             </div>
+            
           </div>
 
           {/* Vehicle Grid */}
