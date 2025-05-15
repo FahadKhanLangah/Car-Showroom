@@ -6,6 +6,27 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: true
 })
+export const loadUser = createAsyncThunk("loaduser", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await api.get('/user-me');
+    return data.user
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || 'Session expired');
+  }
+})
+
+export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
+  try {
+    const { data } = await api.post("/login", { email, password })
+    toast.info(data?.message);
+    if (data.success) {
+      const userData = await api.get('/user-me');
+      return userData.data;
+    }
+  } catch (error) {
+    return toast.error(error.response?.data?.message || 'Login failed')
+  }
+})
 
 export const registerUser = createAsyncThunk("register", async (form, { rejectWithValue }) => {
   try {
@@ -30,27 +51,6 @@ export const registerUser = createAsyncThunk("register", async (form, { rejectWi
   }
 })
 
-export const loadUser = createAsyncThunk("loaduser", async (_, { rejectWithValue }) => {
-  try {
-    const { data } = await api.get('/user-me');
-    return data.user
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.message || 'Session expired');
-  }
-})
-
-export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
-  try {
-    const { data } = await api.post("/login", { email, password })
-    toast.info(data?.message);
-    if (data.success) {
-      const userData = await api.get('/user-me');
-      return userData.data;
-    }
-  } catch (error) {
-    return toast.error(error.response?.data?.message || 'Login failed')
-  }
-})
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
   try {
     const { data } = await api.get("/logout", { withCredentials: true });

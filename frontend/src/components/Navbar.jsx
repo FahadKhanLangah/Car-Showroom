@@ -1,9 +1,10 @@
 import carLogo from '../assets/car_logo.jpg';
 import { IoClose, IoCarSport, IoPeople, IoAnalytics, IoAddCircle } from "react-icons/io5";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../features/auth/authSlice';
+import { FaJediOrder } from 'react-icons/fa6';
 
 const Navbar = ({ showNav, setShowNav }) => {
   const { user } = useSelector(v => v.auth);
@@ -19,33 +20,39 @@ const Navbar = ({ showNav, setShowNav }) => {
   };
 
   const navItems = [
-    { 
-      icon: <FiUser className="mr-3" />, 
-      label: 'View Profile', 
+    {
+      icon: <FiUser className="mr-3" />,
+      label: 'View Profile',
       action: () => navigate('/profile'),
       forAdmin: false
     },
-    { 
-      icon: <IoCarSport className="mr-3" />, 
-      label: user?.role === 'admin' ? 'All Cars' : 'My Cars', 
+    {
+      icon: <IoCarSport className="mr-3" />,
+      label: user?.role === 'admin' ? 'All Cars' : 'My Cars',
       action: () => navigate(user?.role === 'admin' ? '/all-cars' : '/my-cars'),
       forAdmin: false
     },
-    { 
-      icon: <IoPeople className="mr-3" />, 
-      label: 'All Users', 
+    {
+      icon: <IoPeople className="mr-3" />,
+      label: 'All Users',
       action: () => navigate('/all-users'),
       forAdmin: true
     },
-    { 
-      icon: <IoAddCircle className="mr-3" />, 
-      label: 'Add Vehicle', 
+    {
+      icon: <IoAddCircle className="mr-3" />,
+      label: 'Add Vehicle',
       action: () => navigate('/add-car'),
       forAdmin: true
     },
-    { 
-      icon: <IoAnalytics className="mr-3" />, 
-      label: 'Admin Analytics', 
+    {
+      icon: <FaJediOrder className="mr-3" />,
+      label: 'All Orders',
+      action: () => navigate('/order-dashboard'),
+      forAdmin: true
+    },
+    {
+      icon: <IoAnalytics className="mr-3" />,
+      label: 'Admin Analytics',
       action: () => navigate('/admin-analytics'),
       forAdmin: true
     }
@@ -55,7 +62,7 @@ const Navbar = ({ showNav, setShowNav }) => {
     <>
       {/* Mobile Overlay */}
       {showNav && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setShowNav(!showNav)}
         />
@@ -69,7 +76,7 @@ const Navbar = ({ showNav, setShowNav }) => {
         flex flex-col
       `}>
         {/* Close Button (Mobile Only) */}
-        <button 
+        <button
           onClick={() => setShowNav(!showNav)}
           className="absolute top-4 w-5 right-4 text-2xl text-gray-400 hover:text-white transition-colors"
         >
@@ -79,10 +86,10 @@ const Navbar = ({ showNav, setShowNav }) => {
         {/* User Profile Section */}
         <div className="p-6 border-b border-gray-700">
           <div className="flex flex-col items-center">
-            <img 
+            <img
               className="h-20 w-20 rounded-full border-2 border-blue-500 object-cover mb-3"
-              src={user?.avatar || carLogo} 
-              alt="Profile" 
+              src={user?.avatar || carLogo}
+              alt="Profile"
             />
             <h2 className="text-xl font-semibold text-center">{user?.name}</h2>
             {user?.role === 'admin' && (
@@ -107,7 +114,7 @@ const Navbar = ({ showNav, setShowNav }) => {
                   item.action();
                   setShowNav(!showNav);
                 }}
-                className="w-full flex items-center px-6 py-3 mb-1 text-left rounded-lg
+                className="w-full flex items-center px-6 lg:py-2 py-3 mb-1 text-left rounded-lg
                 hover:bg-blue-600 hover:bg-opacity-30 hover:text-blue-400
                 transition-all duration-200"
               >
@@ -118,14 +125,14 @@ const Navbar = ({ showNav, setShowNav }) => {
         </div>
 
         {/* Fixed Logout Button at Bottom */}
-        <div className="p-4 border-t border-gray-800">
+        <div className="border-t border-gray-800">
           <button
             onClick={() => {
               dispatch(logoutUser());
               setShowNav(false);
             }}
-            className="w-full flex items-center justify-center px-6 py-1 rounded-lg
-            bg-red-600 bg-opacity-20 hover:bg-opacity-30 text-white
+            className="w-full p-4 flex items-center justify-center px-6 py-1 rounded-lg
+            bg-red-600 hover:bg-red-800 bg-opacity-20 hover:bg-opacity-30 text-white
             transition-all duration-200"
           >
             <FiLogOut className="mr-3" />

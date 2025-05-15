@@ -44,10 +44,10 @@ const Cars = () => {
           <option value="high-to-low">Price: High to Low</option>
         </select>
       </div>
-      <div className='flex flex-wrap overflow-x-auto gap-3 sm:gap-10 items-center'>
+      <div className='flex flex-wrap overflow-x-auto gap-3 lg:gap-10 items-center'>
         {vehicles.map((vehicle) => (
           <Link key={vehicle._id} to={`/car/${vehicle._id}`}>
-            <div className='h-40 p-3 flex flex-col justify-center items-center hover:bg-amber-100 overflow-hidden w-36 sm:w-40 mb-4'>
+            <div className='h-40 p-2 flex flex-col justify-center items-center hover:bg-amber-100 overflow-hidden w-36 sm:w-40 mb-4'>
               <img
                 className='h-[70%] max-w-full object-cover rounded-sm'
                 src={vehicle.img_url}
